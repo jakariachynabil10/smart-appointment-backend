@@ -1,12 +1,13 @@
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
+import config from "../config";
 
 // Configure Cloudinary once
 cloudinary.config({
-  cloud_name: "dcc9hf4jn",
-  api_key: "639362676591942",
-  api_secret: "FDwK0RKeMMXx_5w5-WVkdSYWVHU",
+  cloud_name: config.cloud_name ,
+  api_key: config.api_key,
+  api_secret: config.api_secret,
 });
 
 // Multer disk storage with extension preserved
