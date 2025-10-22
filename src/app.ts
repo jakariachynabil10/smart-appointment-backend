@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from "express"
 import cors from "cors"
+import globalErrorHandler from "./app/middleware/globalErrorHandling"
 
 
 const app : Application = express()
@@ -11,5 +12,9 @@ app.get("/", (req : Request, res : Response)=>{
         Message : "Backend is working perfectly"
     })
 })
+
+
+
+app.use(globalErrorHandler)
 
 export default app;
