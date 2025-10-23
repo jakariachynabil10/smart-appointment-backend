@@ -35,16 +35,7 @@ const createUserController = catchAsync(async (req: Request, res: Response) => {
 /**
  * Create Specialist Controller
  */
-const createSpecialistController = catchAsync(async (req: Request, res: Response) => {
-  const result = await userService.createSpecialist(req);
 
-  sendResponse(res, {
-    statusCode: 201,
-    success: true,
-    message: "Specialist created successfully",
-    data: result,
-  });
-});
 
 
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
@@ -61,6 +52,5 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
 export const userController = {
   createAdminController,
   createUserController,
-  createSpecialistController,
   getAllFromDB
 };
