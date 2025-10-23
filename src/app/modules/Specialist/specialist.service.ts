@@ -51,6 +51,21 @@ const createSpecialist = async (req: Request) => {
 };
 
 
+const getAllSpecialist = async () => {
+  const specialists = await prisma.specialist.findMany({
+    include: {
+      availability: true, // optional — shows available slots
+      appointments: true, // optional — shows assigned appointments
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return specialists;
+};
+
 export const specialistService = {
-    createSpecialist
+    createSpecialist,
+    getAllSpecialist
 }

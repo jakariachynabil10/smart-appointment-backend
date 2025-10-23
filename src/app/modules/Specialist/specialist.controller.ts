@@ -13,8 +13,19 @@ const createSpecialistController = catchAsync(async (req: Request, res: Response
     data: result,
   });
 });
+const getAllSpecialist = catchAsync(async (req: Request, res: Response) => {
+  const result = await specialistService.getAllSpecialist();
+
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: "Specialists fetched successfully",
+    data: result,
+  });
+});
 
 
 export const specialistController = {
-    createSpecialistController
+    createSpecialistController,
+    getAllSpecialist
 }

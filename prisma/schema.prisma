@@ -27,21 +27,25 @@ model User {
 }
 
 model Service {
-  id           String        @id @default(uuid())
-  name         String
-  description  String?
-  duration     Int
-  price        Float?
-  appointments Appointment[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String        @id @default(uuid())
+  name          String
+  description   String?
+  duration      Int
+  price         Float?
+  specialistId  String?
+  specialist    Specialist?   @relation(fields: [specialistId], references: [id])
+  appointments  Appointment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
+
 
 model Specialist {
   id           String         @id @default(uuid())
   name         String
   email        String         @unique
   specialty    String?
+  service      Service[]
   appointments Appointment[]
   availability Availability[]
   createdAt    DateTime       @default(now())

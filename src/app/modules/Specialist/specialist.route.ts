@@ -16,6 +16,8 @@ router.post(
   }
 );
 
+router.get("/",auth(),specialistController.getAllSpecialist)
+
 
 
 export const specialistRouter = router
