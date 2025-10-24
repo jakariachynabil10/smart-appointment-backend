@@ -1,17 +1,20 @@
+import { Role } from "../generated/prisma";
 import prisma from "../src/shared/prisma";
 import bcrypt from "bcryptjs";
 
 async function main() {
   const hashedPassword = await bcrypt.hash("Admin@123", 10);
 
-  await prisma.user.create({
+ const superAdmin =  await prisma.user.create({
     data: {
       name: "System Admin",
       email: "admin@quickmeet.com",
       password: hashedPassword,
-      role: "ADMIN",
+      role: Role.SUPERADMIN,
     },
   });
+
+  console.log(superAdmin)
 }
 
 main().catch(console.error);

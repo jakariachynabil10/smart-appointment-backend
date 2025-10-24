@@ -5,7 +5,7 @@ import { Role } from "../../../../generated/prisma";
 
 const router = express.Router();
 
-router.post("/create-service",auth(Role.ADMIN), serviceController.createService);
+router.post("/create-service",auth(Role.ADMIN, Role.SUPERADMIN), serviceController.createService);
 router.get("/", serviceController.getAllServices);
 
 export const serviceRoutes = router;

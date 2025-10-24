@@ -8,7 +8,7 @@ const router = express.Router()
 
 router.post(
   "/create-specialist",
-  auth(Role.ADMIN),
+  auth(Role.ADMIN, Role.SUPERADMIN),
   fileUploader.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = JSON.parse(req.body.data);
