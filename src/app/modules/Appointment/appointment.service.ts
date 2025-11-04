@@ -76,8 +76,22 @@ const updateAppointmentStatus = async (req: Request) => {
   return appointment;
 };
 
+
+const getAllAppointment = async () => {
+  const result = await prisma.appointment.findMany({
+    include: {
+      user: true,
+      specialist: true,
+      service: true,
+    },
+    orderBy: { date: "desc" },
+  });
+  return result;
+};
+
 export const appointmentService = {
   createAppointment,
   getUserAppointments,
   updateAppointmentStatus,
+  getAllAppointment
 };
