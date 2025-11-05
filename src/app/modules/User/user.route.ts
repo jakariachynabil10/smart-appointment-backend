@@ -24,9 +24,8 @@ router.post(
   }
 );
 
+router.get("/me", auth(Role.SUPERADMIN, Role.ADMIN, Role.SPECIALIST, Role.USER), userController.getMyProfile);
 
-
-
-router.get("/", userController.getAllFromDB)
+router.get("/", userController.getAllFromDB);
 
 export const UserRoutes = router;

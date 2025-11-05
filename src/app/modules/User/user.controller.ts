@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { userService } from "./user.service";
 import catchAsync from "../../../shared/catchAsync";
 import sendResponse from "../../../shared/sendResponse";
+import { IAuthUser } from "./user.interface";
 
 /**
  * Create Admin Controller
@@ -49,8 +50,26 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+
+const getMyProfile = catchAsync(async (req: Request & { user?: IAuthUser }, res: Response) => {
+
+    const user = req.user;
+
+    const result = await userService.getMyProfile(user as IAuthUser);
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "My profile data fetched!",
+        data: result
+    })
+});
+
+
 export const userController = {
   createAdminController,
   createUserController,
-  getAllFromDB
+  getAllFromDB,
+  getMyProfile
 };

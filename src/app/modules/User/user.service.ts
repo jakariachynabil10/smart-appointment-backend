@@ -3,6 +3,7 @@ import { fileUploader } from "../../../helpers/fileUploder";
 import prisma from "../../../shared/prisma";
 import { Role } from "../../../../generated/prisma";
 import { Request } from "express";
+import { IAuthUser } from "./user.interface";
 
 /**
  * Create ADMIN
@@ -88,8 +89,33 @@ const getAllFromDB = async () => {
   return users;
 };
 
+
+const getMyProfile = async (user : IAuthUser) => {
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where : {
+      email : user?.email,
+    },
+    select : {
+      id : true,
+      email : true,
+      role : true,
+      name : true,
+      profilePhoto : true,
+      appointments  : {
+        include : {
+          specialist : true
+        }
+      }
+    }
+  })
+
+  return userInfo
+
+}
+
 export const userService = {
   createAdmin,
   createUser,
   getAllFromDB,
+  getMyProfile
 };

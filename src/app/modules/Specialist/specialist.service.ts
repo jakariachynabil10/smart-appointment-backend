@@ -44,6 +44,7 @@ const createSpecialist = async (req: Request) => {
       name,
       email,
       specialty: specialty || null,
+      profilePhoto : req.body.profilePhoto
     },
   });
 

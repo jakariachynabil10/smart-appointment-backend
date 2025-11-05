@@ -45,6 +45,7 @@ model Specialist {
   name         String
   email        String         @unique
   specialty    String?
+  profilePhoto String?
   service      Service[]
   appointments Appointment[]
   availability Availability[]
