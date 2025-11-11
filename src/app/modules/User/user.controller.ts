@@ -65,11 +65,28 @@ const getMyProfile = catchAsync(async (req: Request & { user?: IAuthUser }, res:
         data: result
     })
 });
+const deleteUserById = catchAsync(async (req: Request, res: Response) => {
+
+  const {id} = req.params
+
+    const result = await userService.deleteUserById(id);
+
+    sendResponse(res, {
+        statusCode: 201,
+        success: true,
+        message: "User Deleted Successfully",
+        data: result
+    })
+});
+
+
+
 
 
 export const userController = {
   createAdminController,
   createUserController,
   getAllFromDB,
-  getMyProfile
+  getMyProfile,
+  deleteUserById
 };

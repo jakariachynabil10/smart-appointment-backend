@@ -27,5 +27,6 @@ router.post(
 router.get("/me", auth(Role.SUPERADMIN, Role.ADMIN, Role.SPECIALIST, Role.USER), userController.getMyProfile);
 
 router.get("/", userController.getAllFromDB);
+router.delete("/:id", auth(Role.ADMIN, Role.SUPERADMIN), userController.deleteUserById)
 
 export const UserRoutes = router;

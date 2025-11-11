@@ -90,32 +90,92 @@ const getAllFromDB = async () => {
 };
 
 
-const getMyProfile = async (user : IAuthUser) => {
-  const userInfo = await prisma.user.findUniqueOrThrow({
-    where : {
-      email : user?.email,
-    },
-    select : {
-      id : true,
-      email : true,
-      role : true,
-      name : true,
-      profilePhoto : true,
-      appointments  : {
-        include : {
-          specialist : true
-        }
-      }
+const getMyProfile = async (user: IAuthUser) => {
+  if (!user?.email) throw new Error("Invalid user");
+
+  let userInfo;
+
+  if (user.role === Role.SPECIALIST) {
+    // Fetch specialist data
+    userInfo = await prisma.specialist.findUniqueOrThrow({
+      where: { email: user.email },
+      include: {
+        appointments: {
+          include: {
+            user: true, // get user info for each appointment
+          },
+        },
+      },
+    });
+  } else {
+    // Fetch regular user data
+    userInfo = await prisma.user.findUniqueOrThrow({
+      where: { email: user.email },
+      include: {
+        appointments: {
+          include: {
+            specialist: true, // get specialist info for each appointment
+          },
+        },
+      },
+    });
+  }
+
+  return userInfo;
+};
+
+
+const deleteUserById = async (id: string) => {
+  // 1️⃣ Find the user
+  const user = await prisma.user.findUniqueOrThrow({ where: { id } });
+
+  if (user.role === Role.SPECIALIST) {
+    // 2️⃣ Find the specialist by email
+    const specialist = await prisma.specialist.findUnique({
+      where: { email: user.email },
+    });
+
+    if (specialist) {
+      // 3️⃣ Delete all related appointments first
+      await prisma.appointment.deleteMany({
+        where: { specialistId: specialist.id },
+      });
+
+      // 4️⃣ Delete all availability slots linked to this specialist
+      await prisma.availability.deleteMany({
+        where: { specialistId: specialist.id },
+      });
+
+      // 5️⃣ Delete all services created by this specialist
+      await prisma.service.deleteMany({
+        where: { specialistId: specialist.id },
+      });
+
+      // 6️⃣ Finally, delete the specialist record
+      await prisma.specialist.delete({
+        where: { id: specialist.id },
+      });
     }
-  })
+  }
 
-  return userInfo
+  // 7️⃣ Delete all appointments linked to this user (if user had any)
+  await prisma.appointment.deleteMany({
+    where: { userId: id },
+  });
 
-}
+  // 8️⃣ Finally, delete the user
+  const result = await prisma.user.delete({ where: { id } });
+
+  return result;
+};
+
+
+
 
 export const userService = {
   createAdmin,
   createUser,
   getAllFromDB,
-  getMyProfile
+  getMyProfile,
+  deleteUserById
 };

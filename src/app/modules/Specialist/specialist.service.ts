@@ -3,6 +3,7 @@ import { Role } from "../../../../generated/prisma";
 import { fileUploader } from "../../../helpers/fileUploder";
 import prisma from "../../../shared/prisma";
 import bcrypt from "bcryptjs";
+
 /**
  * Create SPECIALIST
  * - Adds record in User table (role = SPECIALIST)
@@ -44,19 +45,21 @@ const createSpecialist = async (req: Request) => {
       name,
       email,
       specialty: specialty || null,
-      profilePhoto : req.body.profilePhoto
+      profilePhoto: req.body.profilePhoto,
     },
   });
 
   return { user: newUser, specialist: newSpecialist };
 };
 
-
+/**
+ * Get All Specialists
+ */
 const getAllSpecialist = async () => {
   const specialists = await prisma.specialist.findMany({
     include: {
-      availability: true, // optional — shows available slots
-      appointments: true, // optional — shows assigned appointments
+      availability: true,
+      appointments: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -66,7 +69,53 @@ const getAllSpecialist = async () => {
   return specialists;
 };
 
+/**
+ * Get Appointments by Specialist ID
+ */
+const getAppointmentBySpecialistID = async (specialistId: string) => {
+  // Check if specialist exists
+  const specialist = await prisma.specialist.findUnique({
+    where: { id: specialistId },
+  });
+
+  if (!specialist) throw new Error("Specialist not found");
+
+  // Fetch all appointments of that specialist
+  const appointments = await prisma.appointment.findMany({
+    where: { specialistId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profilePhoto: true,
+        },
+      },
+      specialist: {
+        select: {
+          id: true,
+          name: true,
+          specialty: true,
+          profilePhoto: true,
+        },
+      },
+      service : true
+    },
+    orderBy: {
+      date: "desc",
+    },
+  });
+
+  return {
+    specialist,
+    totalAppointments: appointments.length,
+    appointments,
+  };
+};
+
 export const specialistService = {
-    createSpecialist,
-    getAllSpecialist
-}
+  createSpecialist,
+  getAllSpecialist,
+  getAppointmentBySpecialistID,
+};

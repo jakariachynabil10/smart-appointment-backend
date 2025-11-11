@@ -18,6 +18,8 @@ router.post(
 
 router.get("/",auth(),specialistController.getAllSpecialist)
 
+router.get("/:id", auth(Role.SPECIALIST), specialistController.getAppointmentBySpecialistID)
+
 
 
 export const specialistRouter = router
