@@ -19,6 +19,8 @@ const createSpecialist = async (req: Request) => {
     req.body.profilePhoto = uploadToCloudinary?.secure_url;
   }
 
+
+
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) throw new Error("User with this email already exists");
 
@@ -38,6 +40,15 @@ const createSpecialist = async (req: Request) => {
       profilePhoto: req.body.profilePhoto,
       role: Role.SPECIALIST,
     },
+     select: {
+      id: true,
+      name: true,
+      email: true,
+      profilePhoto: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   const newSpecialist = await prisma.specialist.create({
@@ -46,6 +57,14 @@ const createSpecialist = async (req: Request) => {
       email,
       specialty: specialty || null,
       profilePhoto: req.body.profilePhoto,
+    },
+     select: {
+      id: true,
+      name: true,
+      email: true,
+      profilePhoto: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
