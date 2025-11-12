@@ -23,8 +23,20 @@ const getAllServices = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getServiceBySpecialistId = catchAsync(async (req: Request, res: Response) => {
+  const {specialistId} = req.params
+  console.log(specialistId)
+  const result = await serviceServices.getServiceBySpecialistId(specialistId);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Specialsit services retrieved successfully",
+    data: result,
+  });
+});
 
 export const serviceController = {
   createService,
   getAllServices,
+  getServiceBySpecialistId
 };

@@ -52,7 +52,36 @@ const getAllServices = async () => {
   return services;
 };
 
+const getServiceBySpecialistId = async (specialistId: string) => {
+  if (!specialistId) {
+    throw new Error("Specialist ID is required");
+  }
+
+  // Check if the specialist exists (optional, but recommended)
+  const specialist = await prisma.specialist.findUnique({
+    where: { id: specialistId },
+  });
+
+  if (!specialist) {
+    throw new Error("Specialist not found");
+  }
+
+  // Fetch all services for the given specialist
+  const services = await prisma.service.findMany({
+    where: { specialistId },
+    orderBy: { createdAt: "desc" },
+    include: {
+      specialist: {
+        select: { id: true, name: true, email: true },
+      },
+    },
+  });
+
+  return services;
+};
+
 export const serviceServices = {
   createService,
   getAllServices,
+  getServiceBySpecialistId
 };
