@@ -5,7 +5,7 @@
 
     const router = express.Router();
 
-    router.post("/create-service",auth(Role.ADMIN, Role.SUPERADMIN), serviceController.createService);
+    router.post("/create-service",auth(Role.SPECIALIST, Role.SUPERADMIN), serviceController.createService);
     router.get("/", serviceController.getAllServices);
     router.get("/:specialistId", auth(), serviceController.getServiceBySpecialistId);
 

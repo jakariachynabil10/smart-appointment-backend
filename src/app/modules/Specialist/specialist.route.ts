@@ -16,7 +16,7 @@ router.post(
   }
 );
 
-router.get("/",auth(),specialistController.getAllSpecialist)
+router.get("/",specialistController.getAllSpecialist)
 
 router.get("/:id", auth(Role.SPECIALIST), specialistController.getAppointmentBySpecialistID)
 
