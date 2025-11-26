@@ -10,3 +10,4 @@
     router.get("/:specialistId", auth(), serviceController.getServiceBySpecialistId);
 
     export const serviceRoutes = router;
+    
