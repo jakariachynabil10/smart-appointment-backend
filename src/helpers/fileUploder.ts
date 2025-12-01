@@ -13,7 +13,7 @@ cloudinary.config({
 // Multer disk storage with extension preserved
 const storage = multer.diskStorage({
   destination(req, file, cb) {
-    cb(null, "uploads"); // make sure 'uploads' folder exists manually
+    cb(null, "/tmp"); // make sure 'uploads' folder exists manually
   },
   filename(req, file, cb) {
     const ext = path.extname(file.originalname);
